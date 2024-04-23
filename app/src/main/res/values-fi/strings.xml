@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sääsovellus</string>
+    <string name="snowy">Luminen</string>
+    <string name="wind_speed_2m_s_direction_north_west">Tuuli: 2m/s, Luoteeseen</string>
+    <string name="forecast">Ennuste</string>
+    <string name="current_weather">Nykyinen sää</string>
+</resources>

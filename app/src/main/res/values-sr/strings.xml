@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vremenska Prognoza</string>
+    <string name="snowy">Sneg</string>
+    <string name="wind_speed_2m_s_direction_north_west">Vetar: 2m/s, Smer: severozapad</string>
+    <string name="forecast">Prognoza</string>
+    <string name="current_weather">Trenutno vreme</string>
+</resources>
