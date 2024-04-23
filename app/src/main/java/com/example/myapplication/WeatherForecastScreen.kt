@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +16,7 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun WeatherForecastScreen(navController: NavHostController) {
-    var tampere=stringResource(R.string.tampere)
+    val tampere=stringResource(R.string.tampere)
 
     val weatherForecast = mutableListOf(
         WeatherData(stringResource(R.string.mon), stringResource(R.string.cloudy), -2.3),
@@ -39,7 +38,7 @@ fun WeatherForecastScreen(navController: NavHostController) {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
-            Header(stringResource(R.string.tampere))
+            Header(tampere)
         }
         LazyColumn(
             modifier = Modifier
@@ -47,8 +46,8 @@ fun WeatherForecastScreen(navController: NavHostController) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(weatherForecast) { WeatherData ->
-                WeatherListItem(WeatherData);
+            items(weatherForecast) { weatherData ->
+                WeatherListItem(weatherData)
             }
         }
     }
