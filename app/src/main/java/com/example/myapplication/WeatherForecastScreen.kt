@@ -17,15 +17,16 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun WeatherForecastScreen(navController: NavHostController) {
+    var tampere=stringResource(R.string.tampere)
 
     val weatherForecast = mutableListOf(
-        WeatherData("Mon", "Cloudy", -2.3),
-        WeatherData("Tue", "Snowy", -2.0),
-        WeatherData("Wed", "Windy", -3.0),
-        WeatherData("Thu", "Snowy", -6.2),
-        WeatherData("Fri", "Sunny", -12.3),
-        WeatherData("Sat", "Cloudy", 2.4),
-        WeatherData("Sun", "Rainy", 3.6),
+        WeatherData(stringResource(R.string.mon), stringResource(R.string.cloudy), -2.3),
+        WeatherData(stringResource(R.string.tue), stringResource(R.string.snowy), -2.0),
+        WeatherData(stringResource(R.string.wed), stringResource(R.string.windy), -3.0),
+        WeatherData(stringResource(R.string.thu), stringResource(R.string.snowy), -6.2),
+        WeatherData(stringResource(R.string.fri), stringResource(R.string.sunny), -12.3),
+        WeatherData(stringResource(R.string.sat), stringResource(R.string.cloudy), 2.4),
+        WeatherData(stringResource(R.string.sun), stringResource(R.string.rainy), 3.6),
     )
     Column(
         modifier = Modifier
@@ -38,7 +39,7 @@ fun WeatherForecastScreen(navController: NavHostController) {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
-            Header("Tampere")
+            Header(stringResource(R.string.tampere))
         }
         LazyColumn(
             modifier = Modifier

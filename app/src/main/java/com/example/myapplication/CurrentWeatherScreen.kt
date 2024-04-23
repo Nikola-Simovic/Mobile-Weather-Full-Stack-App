@@ -33,7 +33,8 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun CurrentWeatherScreen(navController: NavHostController) {
-    var isRefreshButtonClicked by remember { mutableStateOf(false) }
+        var tampere=stringResource(R.string.tampere)
+        var isRefreshButtonClicked by remember { mutableStateOf(false) }
 
     MaterialTheme {
         Column(
@@ -42,7 +43,7 @@ fun CurrentWeatherScreen(navController: NavHostController) {
                 .padding(16.dp)
             ,horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Header("Tampere")
+            Header(tampere)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

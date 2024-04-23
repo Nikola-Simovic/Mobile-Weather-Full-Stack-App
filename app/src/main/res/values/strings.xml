@@ -4,4 +4,16 @@
     <string name="wind_speed_2m_s_direction_north_west">Wind speed: 2m/s, Direction: North-West</string>
     <string name="forecast">Forecast</string>
     <string name="current_weather">Current Weather</string>
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="sun">Sun</string>
+    <string name="cloudy">Cloudy</string>
+    <string name="windy">Windy</string>
+    <string name="sunny">Sunny</string>
+    <string name="rainy">Rainy</string>
+    <string name="tampere">Tampere</string>
 </resources>

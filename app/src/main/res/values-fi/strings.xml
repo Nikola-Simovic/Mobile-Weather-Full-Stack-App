@@ -5,4 +5,16 @@
     <string name="wind_speed_2m_s_direction_north_west">Tuuli: 2m/s, Luoteeseen</string>
     <string name="forecast">Ennuste</string>
     <string name="current_weather">Nykyinen sää</string>
+    <string name="mon">Ma</string>
+    <string name="tue">Ti</string>
+    <string name="wed">Ke</string>
+    <string name="thu">To</string>
+    <string name="fri">Pe</string>
+    <string name="sat">La</string>
+    <string name="sun">Su</string>
+    <string name="cloudy">Pilvinen</string>
+    <string name="windy">Tuulinen</string>
+    <string name="sunny">Aurinkoinen</string>
+    <string name="rainy">Sateinen</string>
+    <string name="tampere">Tampere</string>
 </resources>
