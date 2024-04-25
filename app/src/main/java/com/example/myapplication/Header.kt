@@ -20,19 +20,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+
 @Composable
 fun Header(text: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .background(color = Color(0xFF2B5F8B), RoundedCornerShape(16.dp)),
+            .height(80.dp)
+            .background(color = Color.Black),
+            //.background(color = Color(0xFF2B5F8B)),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color.White,
-            fontSize = 30.sp,
+            fontSize = 40.sp,
             textAlign = TextAlign.Center,
             style = TextStyle(lineHeight = 40.sp)
         )
