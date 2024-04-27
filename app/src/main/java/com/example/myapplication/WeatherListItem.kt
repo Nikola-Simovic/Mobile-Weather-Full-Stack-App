@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+
 @Composable
 fun WeatherListItem(weatherData: WeatherData){
     val cloudy = stringResource(R.string.cloudy)
@@ -69,6 +70,7 @@ fun WeatherListItem(weatherData: WeatherData){
     }
 
 }
+
 
 @Preview
 @Composable

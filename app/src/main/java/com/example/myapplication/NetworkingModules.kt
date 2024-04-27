@@ -63,19 +63,10 @@ data class Sys(
     val sunset: Long
 )
 
-data class WeatherForecastResponse(
-    val cod: String,
-    val message: Int,
-    val cnt: Int,
-    val list: List<WeatherResponse>  // List of weather data
-)
-
 
 
 interface ApiService
 {
-    @GET("todos/1")
-    suspend fun fetchTodo1(): TodoItem
 
     @GET("todos")
     suspend fun fetchTodos(): List<TodoItem>

@@ -15,19 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
 fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from navHostController
-    val tampere=stringResource(R.string.tampere)
     var isLoading by remember { mutableStateOf(true) }
-    var weatherResponses by remember { mutableStateOf<List<WeatherResponse>>(emptyList()) }
     var fetchError by remember { mutableStateOf<String?>(null) }
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
-
-
 
 
     val weatherForecast = mutableListOf(
@@ -50,31 +47,69 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
         isLoading = false
     }
 
+
     if (isLoading) {
         CircularProgressIndicator()
-    }
-    else if (fetchError != null) {
+    } else if (fetchError != null) {
         Text("Error fetching data: $fetchError")
-    }
-else{
-            Column(
+    } else {
+        var weatherForecastList = weatherForecastResponse!!.list
+        var filteredForecastList = filterWeatherForecastList(weatherForecastList)
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        )
+        {
+            //Text(filteredForecastList.toString())
+
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-            )
-            {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    items(weatherForecast) { weatherData ->
-                        WeatherListItem(weatherData)
-                    }
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(filteredForecastList) { weatherData ->
+                    WeatherForecastListItem(weatherData)             }
                 }
 
-            }
+
         }
 
+    }
 
 }
+
+
+fun filterWeatherForecastList(weatherForecastList: List<WeatherForecastData>): List<WeatherForecastData> {
+    // the date format to extract the date part from `dt_txt`
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+    // date format for grouping by the date part
+    val dateOnlyFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+    // grouping the list by date (extracted from `dt_txt`)
+    val groupedByDate = weatherForecastList.groupBy {
+        // parsing the full date and time from `dt_txt` using `dateFormatter`
+        val date: Date? = dateFormatter.parse(it.dt_txt)
+        // extracting just the date with `dateOnlyFormatter`
+        date?.let { dateOnlyFormatter.format(it) } ?: ""
+    }
+
+    // the maximum temperature forecasts
+    val maxTemperatureForecasts = mutableListOf<WeatherForecastData>()
+    for ((_, group) in groupedByDate) {
+        //  the highest `temp_max` temperature in each group
+        val maxTempForecast = group.maxByOrNull { it.main.temp_max }
+        maxTempForecast?.let {
+            // adding the entry with the highest temperature to the result list
+            maxTemperatureForecasts.add(it)
+        }
+    }
+
+    // return the list of maximum temperature forecasts
+    return maxTemperatureForecasts
+}
+
+
+
