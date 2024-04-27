@@ -70,7 +70,7 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(filteredForecastList) { weatherData ->
-                    WeatherForecastListItem(weatherData)             }
+                    WeatherForecastListItem(weatherData) }
                 }
 
 

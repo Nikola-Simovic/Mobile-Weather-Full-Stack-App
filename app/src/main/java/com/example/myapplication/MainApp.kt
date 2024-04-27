@@ -1,5 +1,10 @@
 package com.example.myapplication
 
+import android.content.Intent
+import android.net.Uri
+import android.content.Context
+import android.widget.Toast
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,11 +49,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
+
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -67,6 +75,8 @@ fun MainApp(navController: NavController) {
     val pagerState = rememberPagerState {
         2 // Number of pages in your pager (screen1 and screen2)
     }
+
+    val context=LocalContext.current
 
     val currentPage = remember { mutableStateOf(0) }
     currentPage.value = pagerState.currentPage
@@ -130,8 +140,17 @@ fun MainApp(navController: NavController) {
                         )
                         DropdownMenuItem(
                             onClick = {
-
+                                val url = "https://openweathermap.org/api"
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(url)
+                                if (intent.resolveActivity(context.packageManager) != null) {
+                                    context.startActivity(intent)
+                                }
+                                else {
+                                    Toast.makeText(context, "No application found to handle the intent", Toast.LENGTH_SHORT).show()
+                                }
                                 expanded = false
+
                             },
                             text = { Text("Our source") }
                         )
@@ -188,7 +207,17 @@ fun MainApp(navController: NavController) {
 
                     // Right-side Floating Action Button
                     FloatingActionButton(
-                        onClick = { /* Handle FAB action */ },
+                        onClick = {
+                            val url = "https://openweathermap.org/api"
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data = Uri.parse(url)
+                            if (intent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(intent)
+                             }
+                            else {
+                                 Toast.makeText(context, "No application found to handle the intent", Toast.LENGTH_SHORT).show()
+                            }
+                                  },
                         containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                         elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                     ) {

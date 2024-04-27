@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlin.math.roundToInt
 
 @Composable
 fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
@@ -94,7 +95,7 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "$temperature °C",
+                        text = "${temperature.roundToInt()} °C",
                         style = TextStyle(
                             color = Color(0xFF115C9E),
                             fontSize = 55.sp,
@@ -122,7 +123,7 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text("Wind speed: $windSpeed m/s, Direction: $windDirection",
+                Text("Wind speed: ${windSpeed.roundToInt()} m/s, Direction: $windDirection",
                     color = Color.Black,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
