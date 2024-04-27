@@ -32,10 +32,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 @Composable
-fun CurrentWeatherScreen(navController: NavHostController) {
+fun CurrentWeatherScreen(navController: NavController,currentPage: Int) { //changed from NavHostController for the button
         val tampere=stringResource(R.string.tampere)
         var weatherResponse by remember { mutableStateOf<WeatherResponse?>(null) }
         var isLoading by remember { mutableStateOf(true) }
@@ -118,12 +119,12 @@ fun CurrentWeatherScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                CustomButton(
+            /*    CustomButton(
                     text = stringResource(R.string.forecast),
                     onClick = {
                         navController.navigate("weatherForecastScreen")
                     }
-                )
+                ) */
 
             }
         }

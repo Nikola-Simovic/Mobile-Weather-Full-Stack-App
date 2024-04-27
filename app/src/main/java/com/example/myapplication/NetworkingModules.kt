@@ -63,6 +63,13 @@ data class Sys(
     val sunset: Long
 )
 
+data class WeatherForecastResponse(
+    val cod: String,
+    val message: Int,
+    val cnt: Int,
+    val list: List<WeatherResponse>  // List of weather data
+)
+
 
 
 interface ApiService
@@ -75,6 +82,9 @@ interface ApiService
 
     @GET("weather?q=Tampere,fi&APPID=57a76f941c3f4809f76030d74cf4b726&units=metric")
     suspend fun fetchCurrentWeatherTampere(): WeatherResponse
+
+    @GET("forecast?q=Tampere,fi&appid=57a76f941c3f4809f76030d74cf4b726&units=metric")
+    suspend fun fetchWeatherForecastTampere(): WeatherForecastResponse
 }
 
 object RetrofitInstance{

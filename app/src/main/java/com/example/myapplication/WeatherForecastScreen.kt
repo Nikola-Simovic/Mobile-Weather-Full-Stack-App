@@ -8,12 +8,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 
 @Composable
-fun WeatherForecastScreen(navController: NavHostController) {
+fun WeatherForecastScreen(navController: NavController) {  //changed from navHostController
     val tampere=stringResource(R.string.tampere)
+
 
     val weatherForecast = mutableListOf(
         WeatherData(stringResource(R.string.mon), stringResource(R.string.cloudy), -2.3),

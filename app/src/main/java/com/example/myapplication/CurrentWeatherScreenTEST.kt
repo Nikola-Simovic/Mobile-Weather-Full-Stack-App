@@ -46,11 +46,20 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
     var windDirection = -999
     var weatherDescription="Error"
 
+    var fetchError by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(Unit){
-        weatherResponse = RetrofitInstance.apiService.fetchCurrentWeatherTampere()
-        isLoading=false
+
+
+    LaunchedEffect(Unit) {
+        try {
+            weatherResponse = RetrofitInstance.apiService.fetchCurrentWeatherTampere()
+        } catch (e: Exception) {
+            fetchError = e.message
+        }
+        isLoading = false
     }
+
+
 
     if (weatherResponse != null) {
         temperature = weatherResponse!!.main.temp
@@ -59,8 +68,12 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
         weatherDescription = weatherResponse!!.weather[0].main
     }
 
+
     if (isLoading) {
         CircularProgressIndicator()
+    }
+    else if (fetchError != null) {
+        Text("Error fetching data: $fetchError")
     }
     else {
 
@@ -68,7 +81,7 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.LightGray)
+                    .background(Color(230, 239, 244, 100))
                 , horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(Modifier.padding(innerPadding))
