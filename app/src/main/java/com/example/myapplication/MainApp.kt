@@ -178,7 +178,8 @@ fun MainApp(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Left-side icon
-                    IconButton(onClick = { /* Handle left icon action */ }) {
+                    IconButton(onClick = { /* Handle left icon action */ },
+                        modifier = Modifier.padding(4.dp)) {
                         Icon(
                             imageVector = Icons.Filled.LocationOn,
                             contentDescription = "Left icon"

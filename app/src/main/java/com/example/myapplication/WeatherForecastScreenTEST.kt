@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,8 +14,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -58,11 +66,30 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         )
         {
             //Text(filteredForecastList.toString())
+            Text(
+                text = "Weather Forecast",
+                modifier = Modifier.padding(16.dp)
+                    .drawBehind {
+                        val borderColor = Color.Black
+                        val strokeWidth = 3.dp.toPx()
 
+                        drawLine(
+                            color = borderColor,
+                            start = Offset(0f, size.height), // Start point of the line
+                            end = Offset(size.width, size.height), // End point of the line
+                            strokeWidth = strokeWidth,
+                            cap = StrokeCap.Square //  the line cap style if needed
+                        )
+                    },
+                fontSize = 34.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                textAlign = TextAlign.Center)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
