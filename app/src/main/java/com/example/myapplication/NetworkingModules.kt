@@ -3,6 +3,7 @@ package com.example.myapplication
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 data class WeatherResponse(
     val coord: Coord,
@@ -76,6 +77,20 @@ interface ApiService
 
     @GET("forecast?q=Tampere,fi&appid=57a76f941c3f4809f76030d74cf4b726&units=metric")
     suspend fun fetchWeatherForecastTampere(): WeatherForecastResponse
+
+    @GET("weather?APPID=57a76f941c3f4809f76030d74cf4b726&units=metric")
+    suspend fun fetchCurrentWeatherByCoordinates(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double
+    ): WeatherResponse
+
+    @GET("forecast?APPID=57a76f941c3f4809f76030d74cf4b726&units=metric")
+    suspend fun fetchWeatherForecastByCoordinates(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double
+    ): WeatherForecastResponse
+
+
 }
 
 object RetrofitInstance{

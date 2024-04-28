@@ -23,10 +23,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,11 +43,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
-fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
-    val tampere=stringResource(R.string.tampere)
+fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
+    var city=stringResource(R.string.tampere)
     var weatherResponse by remember { mutableStateOf<WeatherResponse?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var temperature = -999.99
@@ -58,14 +62,54 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
 
 
 
-    LaunchedEffect(Unit) {
-        try {
-            weatherResponse = RetrofitInstance.apiService.fetchCurrentWeatherTampere()
-        } catch (e: Exception) {
-            fetchError = e.message
+    LaunchedEffect(lat, lon) {
+        isLoading = true
+        if (lat == 0.0 && lon == 0.0) {
+            // Fetch data for Tampere
+            try {
+                weatherResponse = RetrofitInstance.apiService.fetchCurrentWeatherTampere()
+                fetchError = null
+            } catch (e: Exception) {
+                fetchError = e.message
+            }
+        } else {
+            // Fetch data based on latitude and longitude
+            try {
+                val response = RetrofitInstance.apiService.fetchCurrentWeatherByCoordinates(lat, lon)
+                weatherResponse = response
+                fetchError = null
+            } catch (e: Exception) {
+                fetchError = e.message
+            }
         }
         isLoading = false
     }
+
+
+
+    //considering the fetchCurrentWeather needed a coroutine, this was required
+   /* val coroutineScope = rememberCoroutineScope()
+
+    if (lat != 0.0 && lon != 0.0) {
+        DisposableEffect(lat, lon) {
+            coroutineScope.launch {
+                try {
+                    val response =
+                        RetrofitInstance.apiService.fetchCurrentWeatherByCoordinates(lat, lon)
+                    weatherResponse = response
+                    fetchError = null
+                } catch (e: Exception) {
+                    fetchError = e.message
+                } finally {
+                    isLoading = false
+                }
+            }
+            onDispose { }
+        }
+    }*/
+
+
+
 
 
 
@@ -76,6 +120,7 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
         weatherDescription = weatherResponse!!.weather[0].main
         humidity = weatherResponse!!.main.humidity
         feelsLike=weatherResponse!!.main.feels_like
+        city=weatherResponse!!.name
 
     }
 
@@ -130,7 +175,7 @@ fun CurrentWeatherScreenTEST(innerPadding: PaddingValues) {
 
 
                 Text(
-                    text = weatherDescription,
+                    text = "$weatherDescription in $city ",
                     color = Color.Black,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center,

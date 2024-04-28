@@ -30,7 +30,7 @@ import java.util.Locale
 
 
 @Composable
-fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from navHostController
+fun WeatherForecastScreenTEST(lat: Double, lon: Double) {  //changed from navHostController
     var isLoading by remember { mutableStateOf(true) }
     var fetchError by remember { mutableStateOf<String?>(null) }
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
@@ -47,11 +47,25 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
     )
 
 
-    LaunchedEffect(Unit) {
-        try {
-            weatherForecastResponse = RetrofitInstance.apiService.fetchWeatherForecastTampere()
-        } catch (e: Exception) {
-            fetchError = e.message
+    LaunchedEffect(lat, lon) {
+        isLoading = true
+        if (lat == 0.0 && lon == 0.0) {
+            // Fetch data for Tampere
+            try {
+                weatherForecastResponse = RetrofitInstance.apiService.fetchWeatherForecastTampere()
+                fetchError = null
+            } catch (e: Exception) {
+                fetchError = e.message
+            }
+        } else {
+            // Fetch data based on latitude and longitude
+            try {
+                val response = RetrofitInstance.apiService.fetchWeatherForecastByCoordinates(lat, lon)
+                weatherForecastResponse = response
+                fetchError = null
+            } catch (e: Exception) {
+                fetchError = e.message
+            }
         }
         isLoading = false
     }
@@ -74,7 +88,7 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
         {
             //Text(filteredForecastList.toString())
             Text(
-                text = "Weather Forecast",
+                text = "Forecast ",
                 modifier = Modifier.padding(top = 16.dp, start = 0.dp, end = 0.dp, bottom = 0.dp)
                     .drawBehind {
                         val borderColor = Color.Black

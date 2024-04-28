@@ -96,6 +96,8 @@ fun MainApp(navController: NavController) {
 
     var lat = 89.99
     var lon =179.99
+    var newLat=remember { mutableStateOf(0.0) }
+    var newLon=remember { mutableStateOf(0.0) }
 
 
     val currentPage = remember { mutableStateOf(0) }
@@ -126,7 +128,7 @@ fun MainApp(navController: NavController) {
                 ),
                 title = {
                     Text(
-                        "Tampere",
+                        "Weather",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -281,11 +283,21 @@ fun MainApp(navController: NavController) {
                                          {
                                              val location=locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
 
+                                             if (location != null) {
+                                                 newLon.value = location.longitude
+                                                 newLat.value = location.latitude
+
+                                             }
+
                                              val locationEventListener = object: LocationListener{
                                                  override fun onLocationChanged(location: Location) {
                                                      if (location!=null)
                                                      {
-                                                         Toast.makeText(context, "Lat: ${location.latitude} , Lng: ${location.longitude}", Toast.LENGTH_LONG).show()
+                                                         lat = location.latitude
+                                                         lon = location.longitude
+                                                         newLon.value = location.longitude
+                                                         newLat.value = location.latitude
+
 
                                                      }
                                                  }
@@ -390,8 +402,8 @@ fun MainApp(navController: NavController) {
                 // Determine the current page and display content accordingly
                 currentPage.value = page
                 when (page) {
-                    0 -> CurrentWeatherScreenTEST(innerPadding)
-                    1 -> WeatherForecastScreenTEST(innerPadding)
+                    0 -> CurrentWeatherScreenTEST(newLat.value,newLon.value)
+                    1 -> WeatherForecastScreenTEST(newLat.value,newLon.value)
                 }
             }
         }
