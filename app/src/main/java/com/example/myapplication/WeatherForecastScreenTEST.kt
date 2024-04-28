@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -66,7 +67,8 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
 
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(Color(230, 239, 244, 100)),
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
@@ -87,9 +89,10 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
                         )
                     },
                 fontSize = 34.sp,
-                fontWeight = FontWeight.Bold,
                 color = Color.Black,
-                textAlign = TextAlign.Center)
+                textAlign = TextAlign.Center
+            )
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()

@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -92,6 +93,9 @@ fun MainApp(navController: NavController) {
     val context=LocalContext.current
     val locationManager= context.getSystemService(LOCATION_SERVICE) as LocationManager
     val locationPermissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+    var lat = 89.99
+    var lon =179.99
 
 
     val currentPage = remember { mutableStateOf(0) }
@@ -126,7 +130,7 @@ fun MainApp(navController: NavController) {
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
-                        fontSize = 26.sp
+                        fontSize = 30.sp
                     )
                 },
                 navigationIcon = {
@@ -162,7 +166,72 @@ fun MainApp(navController: NavController) {
                     ) {
                         DropdownMenuItem(
                             onClick = {
+                                if (locationPermissionState.status.isGranted)
+                                {
+                                    val location=locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
+                                    if ((location?.latitude)!=null) {
+                                        lat = location.latitude
+                                    }
+                                    if ((location?.longitude)!=null) {
+                                        lon = location.longitude
+                                    }
 
+
+
+                                    val locationEventListener = object: LocationListener{
+                                        override fun onLocationChanged(location: Location) {
+                                            if (location!=null)
+                                            {
+                                                 lat = location.latitude
+                                                 lon = location.longitude
+
+                                            }
+                                        }
+
+                                        override fun onStatusChanged(provider: String, status: Int, extras: Bundle?) {
+
+                                        }
+
+                                        override fun onProviderEnabled(provider: String) {
+                                            Toast.makeText(context, "Provider $provider is enabled", Toast.LENGTH_SHORT).show()
+                                        }
+
+                                        override fun onProviderDisabled(provider: String) {
+                                            Toast.makeText(context, "Provider $provider is disabled", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,0,0.0f,locationEventListener)
+                                    val geoUri = Uri.parse("geo:$lat,$lon?q=$lat,$lon")
+
+                                    val intent = Intent(Intent.ACTION_VIEW, geoUri)
+
+                                    if (intent.resolveActivity(context.packageManager) != null) {
+                                        context.startActivity(intent)
+                                    } else {
+                                        Toast.makeText(context, "No app available to show the location", Toast.LENGTH_SHORT).show()
+                                    }
+
+
+
+
+                                }
+                                else {
+                                    val builder = AlertDialog.Builder(context)
+
+                                    builder.setTitle("Permission Required")
+                                    builder.setMessage("This app requires your permission. To enable this functionality, go to Permissions -> Location -> Allow while using the app.")
+
+                                    builder.setPositiveButton("OK") { _, _ ->
+                                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                        val uri = Uri.fromParts("package", context.packageName, null)
+                                        intent.data = uri
+                                        context.startActivity(intent)
+                                    }
+
+                                    // Create the dialog and show it
+                                    val dialog = builder.create()
+                                    dialog.show()
+                                }
                                 expanded = false
                             },
                             text = { Text("Open Map") }
