@@ -1,8 +1,16 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -41,6 +49,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,11 +70,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
 
+@SuppressLint("MissingPermission")
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalPagerApi::class
+    ExperimentalPagerApi::class, ExperimentalPermissionsApi::class
 )
 @Composable
 fun MainApp(navController: NavController) {
@@ -77,10 +90,26 @@ fun MainApp(navController: NavController) {
     }
 
     val context=LocalContext.current
+    val locationManager= context.getSystemService(LOCATION_SERVICE) as LocationManager
+    val locationPermissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
 
     val currentPage = remember { mutableStateOf(0) }
     currentPage.value = pagerState.currentPage
 
+    var locationError by remember { mutableStateOf<String?>(null) }
+
+
+
+    LaunchedEffect(Unit) {
+        if(!(locationPermissionState.status.isGranted)) {
+            try {
+                locationPermissionState.launchPermissionRequest()
+            } catch (e: Exception) {
+                locationError = e.message
+            }
+        }
+    }
 
 
 
@@ -178,11 +207,59 @@ fun MainApp(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Left-side icon
-                    IconButton(onClick = { /* Handle left icon action */ },
+                    IconButton(onClick = {
+                                         if (locationPermissionState.status.isGranted)
+                                         {
+                                             val location=locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
+
+                                             val locationEventListener = object: LocationListener{
+                                                 override fun onLocationChanged(location: Location) {
+                                                     if (location!=null)
+                                                     {
+                                                         Toast.makeText(context, "Lat: ${location.latitude} , Lng: ${location.longitude}", Toast.LENGTH_LONG).show()
+
+                                                     }
+                                                 }
+
+                                                 override fun onStatusChanged(provider: String, status: Int, extras: Bundle?) {
+
+                                                 }
+
+                                                 override fun onProviderEnabled(provider: String) {
+                                                     Toast.makeText(context, "Provider $provider is enabled", Toast.LENGTH_SHORT).show()
+                                                 }
+
+                                                 override fun onProviderDisabled(provider: String) {
+                                                     Toast.makeText(context, "Provider $provider is disabled", Toast.LENGTH_SHORT).show()
+                                                 }
+                                             }
+                                             locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,0,0.0f,locationEventListener)
+
+
+
+                                         }
+                        else {
+                                             val builder = AlertDialog.Builder(context)
+
+                                             builder.setTitle("Permission Required")
+                                             builder.setMessage("This app requires your permission. To enable this functionality, go to Permissions -> Location -> Allow while using the app.")
+
+                                             builder.setPositiveButton("OK") { _, _ ->
+                                                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                 val uri = Uri.fromParts("package", context.packageName, null)
+                                                 intent.data = uri
+                                                 context.startActivity(intent)
+                                             }
+
+                                             // Create the dialog and show it
+                                             val dialog = builder.create()
+                                             dialog.show()
+                        }
+                    },
                         modifier = Modifier.padding(4.dp)) {
                         Icon(
                             imageVector = Icons.Filled.LocationOn,
-                            contentDescription = "Left icon"
+                            contentDescription = "Map"
                         )
                     }
 
@@ -216,7 +293,7 @@ fun MainApp(navController: NavController) {
                                 context.startActivity(intent)
                              }
                             else {
-                                 Toast.makeText(context, "No application found to handle the intent", Toast.LENGTH_SHORT).show()
+                                 Toast.makeText(context, "No application found to handle the intent", Toast.LENGTH_LONG).show()
                             }
                                   },
                         containerColor = BottomAppBarDefaults.bottomAppBarFabColor,

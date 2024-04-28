@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
+    val primaryContainerColor = MaterialTheme.colorScheme.secondaryContainer
 
     Column(
         modifier = Modifier
@@ -34,7 +36,7 @@ fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp)
-                .background(Color.LightGray, RoundedCornerShape(16.dp))
+                .background(primaryContainerColor, RoundedCornerShape(16.dp))
                 .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -97,7 +99,7 @@ fun getImageResource(description:String): Int
 
     return when (description) {
         snow -> R.drawable.snowy_image
-        clouds -> R.drawable.cloudy_image_2
+        clouds -> R.drawable.cloudy_image
         clear -> R.drawable.sunny_image
         rain -> R.drawable.rainy_image
         wind -> R.drawable.windy_image

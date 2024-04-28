@@ -69,6 +69,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     implementation("com.google.accompanist:accompanist-pager:0.30.0")  //pager
+    implementation("com.google.accompanist:accompanist-permissions:0.30.0")
+
 
 }

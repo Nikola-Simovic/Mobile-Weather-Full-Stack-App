@@ -73,7 +73,7 @@ fun WeatherForecastScreenTEST(innerPadding: PaddingValues) {  //changed from nav
             //Text(filteredForecastList.toString())
             Text(
                 text = "Weather Forecast",
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(top = 16.dp, start = 0.dp, end = 0.dp, bottom = 0.dp)
                     .drawBehind {
                         val borderColor = Color.Black
                         val strokeWidth = 3.dp.toPx()
