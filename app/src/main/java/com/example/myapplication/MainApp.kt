@@ -135,20 +135,6 @@ fun MainApp(navController: NavController) {
                         fontSize = 30.sp
                     )
                 },
-                navigationIcon = {
-                    // Conditionally include the navigation icon only when on the second page
-                    if (currentPage.value == 1) {
-                        IconButton(onClick = {
-                            // Animate the pager to scroll to page 0
-                            navController.navigate("home")
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    }
-                },
                 actions = {
                     // State variable to manage the expanded state of the dropdown menu
                     var expanded by remember { mutableStateOf(false) }

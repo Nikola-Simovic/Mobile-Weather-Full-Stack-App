@@ -1,7 +1,5 @@
 package com.example.myapplication
 
-import androidx.compose.foundation.layout.PaddingValues
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,19 +15,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,14 +36,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+
 
 @Composable
 fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
     var city=stringResource(R.string.tampere)
     var weatherResponse by remember { mutableStateOf<WeatherResponse?>(null) }
+    var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var temperature = -999.99
     var windSpeed = -999.99
@@ -68,6 +64,7 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
             // Fetch data for Tampere
             try {
                 weatherResponse = RetrofitInstance.apiService.fetchCurrentWeatherTampere()
+                weatherForecastResponse = RetrofitInstance.apiService.fetchWeatherForecastTampere()
                 fetchError = null
             } catch (e: Exception) {
                 fetchError = e.message
@@ -77,6 +74,8 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
             try {
                 val response = RetrofitInstance.apiService.fetchCurrentWeatherByCoordinates(lat, lon)
                 weatherResponse = response
+                val forecastResponse = RetrofitInstance.apiService.fetchWeatherForecastByCoordinates(lat, lon)
+                weatherForecastResponse=forecastResponse
                 fetchError = null
             } catch (e: Exception) {
                 fetchError = e.message
@@ -84,33 +83,6 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
         }
         isLoading = false
     }
-
-
-
-    //considering the fetchCurrentWeather needed a coroutine, this was required
-   /* val coroutineScope = rememberCoroutineScope()
-
-    if (lat != 0.0 && lon != 0.0) {
-        DisposableEffect(lat, lon) {
-            coroutineScope.launch {
-                try {
-                    val response =
-                        RetrofitInstance.apiService.fetchCurrentWeatherByCoordinates(lat, lon)
-                    weatherResponse = response
-                    fetchError = null
-                } catch (e: Exception) {
-                    fetchError = e.message
-                } finally {
-                    isLoading = false
-                }
-            }
-            onDispose { }
-        }
-    }*/
-
-
-
-
 
 
     if (weatherResponse != null) {
@@ -151,16 +123,15 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                         painter = painterResource(getBackgroundImageResource(weatherDescription)),
                         contentDescription = "Weather Icon",
                         modifier = Modifier
-                            .size(350.dp,250.dp)
+                            .size(350.dp, 250.dp)
                             .clip(RoundedCornerShape(30.dp))
                             .border(
-                                width = 10.dp,  // Width of the border
-                                color = MaterialTheme.colorScheme.secondaryContainer,  // Color of the border (white)
-                                shape = RoundedCornerShape(30.dp)  // Shape of the border with rounded corners
+                                width = 10.dp,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                shape = RoundedCornerShape(30.dp)
                             )
                     )
 
-                    // Text centered at the bottom of the image
                     Text(
                         text = "${temperature.roundToInt()} °C",
                         style = TextStyle(
@@ -190,6 +161,12 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                         .padding(16.dp)
                 ) {
                     item {
+                        ScrollableRow(weatherForecastResponse)
+
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -200,7 +177,10 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(12.dp))
+                                    .background(
+                                        MaterialTheme.colorScheme.secondaryContainer,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
                                     .padding(8.dp)
                                     .height(90.dp),
                                 contentAlignment = Alignment.Center
@@ -228,7 +208,10 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(12.dp))
+                                    .background(
+                                        MaterialTheme.colorScheme.secondaryContainer,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
                                     .padding(8.dp)
                                     .height(90.dp),
                                 contentAlignment = Alignment.Center
@@ -264,7 +247,10 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(12.dp))
+                                    .background(
+                                        MaterialTheme.colorScheme.secondaryContainer,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
                                     .padding(8.dp)
                                     .height(90.dp),
                                 contentAlignment = Alignment.Center
@@ -292,7 +278,10 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(12.dp))
+                                    .background(
+                                        MaterialTheme.colorScheme.secondaryContainer,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
                                     .padding(8.dp)
                                     .height(90.dp),
                                 contentAlignment = Alignment.Center
@@ -302,7 +291,7 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Text(
-                                        text = "$windDirection°",
+                                        text = degreesToCompass(windDirection),
                                         fontSize = 28.sp,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -341,5 +330,78 @@ fun getBackgroundImageResource(description:String): Int
         rain -> R.drawable.rain_background
         wind -> R.drawable.windy_image
         else -> R.drawable.clicked_refresh_icon
+    }
+}
+
+fun degreesToCompass(degrees: Int): String {
+    val directions = arrayOf("N", "NE", "E", "SE", "S", "SW", "W", "NW")
+    val index = ((degrees / 45.0) + 0.5).toInt() % 8
+    return directions[index]
+}
+
+@Composable
+fun ScrollableRow(weatherForecastResponse: WeatherForecastResponse?) {
+    var extractedText = "N/A"
+    var extractedTemp = -99.99
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .horizontalScroll(rememberScrollState())
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            repeat(8) { index ->
+                Box(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .width(80.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (weatherForecastResponse != null) {
+                        val text = weatherForecastResponse.list[index].dt_txt
+                        extractedTemp = weatherForecastResponse.list[index].main.temp
+                        if (index == 0) {
+                            extractedText = "Now"
+                        } else {
+                            extractedText = text.substring(11..12)
+                        }
+
+                        // Column to arrange image and text
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                            text = extractedText,
+                            fontSize = 14.sp,
+                        )
+
+                            Image(
+                                painter = painterResource(id = getImageResource(weatherForecastResponse.list[index].weather[0].main)),
+                                contentDescription = "Weather Icon",
+                                modifier = Modifier.size(40.dp)
+                            )
+                            Text(
+                                text = "${extractedTemp.toInt()}°",
+                                fontSize = 14.sp,
+                            )
+
+
+
+
+                        }
+                    } else {
+                        Text("Error Fetching Data")
+                    }
+                }
+            }
+        }
     }
 }
