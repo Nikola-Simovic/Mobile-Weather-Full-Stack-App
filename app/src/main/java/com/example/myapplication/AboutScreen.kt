@@ -23,16 +23,13 @@ import androidx.navigation.NavController
 fun AboutScreen(navController: NavController) {
     val context= LocalContext.current
 
-    val isDarkTheme = isSystemInDarkTheme()
-
+    val isDarkTheme = isSystemInDarkTheme()      //in order to style the app better, a check of theme was done
+                                                 //after which the colors are adjusted to match the desired mode
     val titleColor = if (isDarkTheme) Color.White else Color.Black
     val textColor = if (isDarkTheme) Color.White else MaterialTheme.colorScheme.onSurface
-    var backgroundColor = if (isDarkTheme) {
-        Color(230, 239, 244, 100)
-    } else {
-        Color(230, 239, 244, 100)
+    var backgroundColor = Color(230, 239, 244, 100)
 
-    }
+
     val headerColor = if (isDarkTheme) Color(202, 231, 254, 150) else { MaterialTheme.colorScheme.primaryContainer}
 
     var buttonColorMode = if (isDarkTheme) MaterialTheme.colorScheme.secondaryContainer else { MaterialTheme.colorScheme.primaryContainer}
@@ -47,11 +44,11 @@ fun AboutScreen(navController: NavController) {
                 ),
                 title = {
                     Box(
-                        modifier = Modifier.fillMaxSize(), // Fill the entire space of the top app bar
-                        contentAlignment = Alignment.Center  // Center the title both vertically and horizontally
+                        modifier = Modifier.fillMaxSize(),   //fills the entire space of the top app bar
+                        contentAlignment = Alignment.Center  //centers the title both vertically and horizontally
                     ) {
                         Text(
-                            text = stringResource(R.string.about),
+                            text = stringResource(R.string.about),  //like in a lot of places, string resources are used for localization
                             fontSize = 35.sp,
                             fontWeight = FontWeight.Bold,
                             color = titleColor
@@ -76,7 +73,7 @@ fun AboutScreen(navController: NavController) {
                             val recipient="nikola.simovic@tuni.fi"
 
 
-                            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {  //code that runs an intent if the user wants to send an email
                                 data = Uri.parse("mailto:$recipient")
                                 putExtra(Intent.EXTRA_SUBJECT, "Amazing weather app")
                                 putExtra(Intent.EXTRA_TEXT, "Wow,\n\n")
@@ -84,7 +81,7 @@ fun AboutScreen(navController: NavController) {
                             if (emailIntent.resolveActivity(context.packageManager) != null) {
                                 context.startActivity(emailIntent)
                             } else {
-                                Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()  //an error message if no email app is found
                             }
                         },
                         modifier = Modifier.padding(16.dp).weight(1f),
@@ -95,8 +92,9 @@ fun AboutScreen(navController: NavController) {
                     }
                     Button(
                         onClick = {
-                            navController.navigate("home") {
-
+                            navController.navigate("home") {  //jetpack navigation into the home page --- the navigation from about to
+                                //the main page restarts the app , pulling up the data for Tampere again, so that testing can be done and we can easily compare
+                                //location data without a need to manually restart the app (a choice made for testing and demonstration purposes only from the about section)
                             }
                         },
 

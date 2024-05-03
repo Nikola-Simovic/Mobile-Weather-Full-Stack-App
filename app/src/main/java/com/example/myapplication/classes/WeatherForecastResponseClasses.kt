@@ -1,5 +1,7 @@
 package com.example.myapplication.classes
 
+//The classes here are put in a single file due to the fact that they are all related to a single
+//JSON response, just nested, so putting them in a single file was done for the sake of clarity.
 data class WeatherForecastResponse(
     val cod: String,
     val message: Int,

@@ -48,14 +48,15 @@ import java.util.Locale
 @Composable
 fun CurrentWeatherScreen(lat: Double, lon: Double) {
     var city=stringResource(R.string.tampere)
-    var weatherResponse by remember { mutableStateOf<WeatherResponse?>(null) }
+    var weatherResponse by remember { mutableStateOf<WeatherResponse?>(null) }         //simple remembers to update the app
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
     var isLoading by remember { mutableStateOf(true) }
-    var temperature = -999.99
-    var windSpeed = -999.99
-    var windDirection = -999
-    var humidity = -999
-    var feelsLike = -999.99
+
+    var temperature = -999.99   //default values, made clearly wrong, so that the app will stay stable and the error will be clear
+    var windSpeed = -999.98
+    var windDirection = -997
+    var humidity = -996
+    var feelsLike = -999.95
     var weatherDescription="Error"
 
     var fetchError by remember { mutableStateOf<String?>(null) }
@@ -68,7 +69,7 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
 
 
 
-    LaunchedEffect(lat, lon) {
+    LaunchedEffect(lat, lon) {   //starts off with data for tampere by default
         isLoading = true
         if (lat == 0.0 && lon == 0.0) {
             // Fetch data for Tampere
@@ -80,14 +81,14 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
                 fetchError = e.message
             }
         } else {
-            // Fetch data based on latitude and longitude
+            // fetches data based on latitude and longitude if the user allows for the location to be tracked
             try {
                 val response = RetrofitInstance.apiService.fetchCurrentWeatherByCoordinates(lat, lon)
                 weatherResponse = response
                 val forecastResponse = RetrofitInstance.apiService.fetchWeatherForecastByCoordinates(lat, lon)
                 weatherForecastResponse=forecastResponse
                 fetchError = null
-            } catch (e: Exception) {
+            } catch (e: Exception) {   //error checks for safety
                 fetchError = e.message
             }
         }
@@ -95,7 +96,7 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
     }
 
 
-    if (weatherResponse != null) {
+    if (weatherResponse != null) {     //error checks insuring that we get a weather response
         temperature = weatherResponse!!.main.temp
         windSpeed = weatherResponse!!.wind.speed
         windDirection = weatherResponse!!.wind.deg
@@ -107,7 +108,7 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
     }
 
 
-    if (isLoading) {
+    if (isLoading) {    //more safety checks along with a circular indicator to show loading
         CircularProgressIndicator()
     }
     else if (fetchError != null) {
@@ -130,7 +131,7 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
                 ) {
                     // Image
                     Image(
-                        painter = painterResource(getBackgroundImageResource(weatherDescription)),
+                        painter = painterResource(getBackgroundImageResource(weatherDescription)), //images based on the weather
                         contentDescription = "Weather Icon",
                         modifier = Modifier
                             .size(350.dp, 250.dp)
@@ -156,7 +157,7 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
 
 
                 Text(
-                    text = weatherDescriptionTextFormatter(weatherDescription,city,context), //due to finnish having a different word order
+                    text = weatherDescriptionTextFormatter(weatherDescription,city,context), //due to finnish having a different word order this was required for localization
                     color = titleColor,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center,
@@ -165,19 +166,18 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
-                LazyColumn(
+                LazyColumn(   //a lazy column in order to load the data and allow scrolling in the app
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
                     item {
-                        ScrollableRow(weatherForecastResponse)
-
+                        ScrollableRow(weatherForecastResponse)  //a scrollable row that holds the daily weather and remembers how far we scrolled
+                        //with a clear display and images/times/temperature
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-
-                        Row(
+                        Row(      //a row with two boxes combo that holds the data of the feels-like and humidity values and descriptions
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp),
@@ -245,9 +245,9 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))  //a bit of space between the scrollable rows
 
-                        Row(
+                        Row(   //the second row-boxes combo that holds the wind speed and direction data and descriptions
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp),
@@ -325,7 +325,7 @@ fun CurrentWeatherScreen(lat: Double, lon: Double) {
     }
 }
 @Composable
-fun getBackgroundImageResource(description:String): Int
+fun getBackgroundImageResource(description:String): Int  //in order to get the proper background image, a value is returned based on the description
 {
     val clouds = "Clouds"
     val snow = "Snow"
@@ -342,7 +342,7 @@ fun getBackgroundImageResource(description:String): Int
         else -> R.drawable.clicked_refresh_icon
     }
 }
-fun degreesToCompass(context: Context, degrees: Int): String {
+fun degreesToCompass(context: Context, degrees: Int): String { //mapping all of the compass values for english and finnish for localization
     val directions = arrayOf(context.getString(R.string.northShortcut),
         context.getString(R.string.northEastShortcut),
         context.getString(R.string.eastShortcut),
@@ -351,14 +351,13 @@ fun degreesToCompass(context: Context, degrees: Int): String {
         context.getString(R.string.southWestShortcut),
         context.getString(R.string.westShortcut),
         context.getString(R.string.northWestShortcut))
-    val index = ((degrees / 45.0) + 0.5).toInt() % 8
+    val index = ((degrees / 45.0) + 0.5).toInt() % 8   //the direction received is in degrees which needed to be transformed into a direction
     return directions[index]
 }
 
 
-fun weatherDescriptionTextFormatter(description: String, city: String, context: Context) : String{
-    val locale: Locale = context.resources.configuration.locales.get(0)
-
+fun weatherDescriptionTextFormatter(description: String, city: String, context: Context) : String{  //a description formatter, due to the style choices made, the app
+    val locale: Locale = context.resources.configuration.locales.get(0)  //needed to have a different syntax in Finnish, so a formatter was created in order to address that
     val descriptionToResourceId = when (description) {
         "Clear" -> R.string.clear
         "Clouds" -> R.string.cloudy

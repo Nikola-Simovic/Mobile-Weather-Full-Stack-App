@@ -3,7 +3,7 @@ package com.example.myapplication
 import androidx.compose.runtime.Composable
 
 @Composable
-fun getImageResource(description:String): Int
+fun getImageResource(description:String): Int  //this code chooses the icons for the app displays based on the description
 {
     val clouds = "Clouds"
     val snow = "Snow"

@@ -67,6 +67,10 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
 
+//This is the main part of the application, here the outlines of the app are made, aka. the top and bottom bars on the main screen
+//and their functionalities. The content itself is scrolled via a pager which uses the CurrentWeatherScreen or WeatherForecastScreen
+//
+
 @SuppressLint("MissingPermission")
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class
