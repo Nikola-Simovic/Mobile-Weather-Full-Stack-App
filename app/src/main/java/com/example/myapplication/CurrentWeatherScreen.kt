@@ -38,15 +38,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.platform.LocalContext
+import com.example.myapplication.classes.WeatherForecastResponse
+import com.example.myapplication.classes.WeatherResponse
 import java.util.Locale
 
 
 @Composable
-fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
+fun CurrentWeatherScreen(lat: Double, lon: Double) {
     var city=stringResource(R.string.tampere)
     var weatherResponse by remember { mutableStateOf<WeatherResponse?>(null) }
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
@@ -373,72 +373,5 @@ fun weatherDescriptionTextFormatter(description: String, city: String, context: 
         "$description in $city"
     } else {
         "$localizedDescription ${city}ssa"
-    }
-}
-
-@Composable
-fun ScrollableRow(weatherForecastResponse: WeatherForecastResponse?) {
-    var extractedText = "N/A"
-    var extractedTemp = -99.99
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .horizontalScroll(rememberScrollState())
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            repeat(8) { index ->
-                Box(
-                    modifier = Modifier
-                        .height(100.dp)
-                        .width(80.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (weatherForecastResponse != null) {
-                        val text = weatherForecastResponse.list[index].dt_txt
-                        extractedTemp = weatherForecastResponse.list[index].main.temp
-                        if (index == 0) {
-                            extractedText = stringResource(R.string.now)
-                        } else {
-                            extractedText = text.substring(11..12)
-                        }
-
-                        // Column to arrange image and text
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = extractedText,
-                                fontSize = 14.sp,
-                            )
-
-                            Image(
-                                painter = painterResource(id = getImageResource(weatherForecastResponse.list[index].weather[0].main)),
-                                contentDescription = "Weather Icon",
-                                modifier = Modifier.size(40.dp)
-                            )
-                            Text(
-                                text = "${extractedTemp.toInt()}°",
-                                fontSize = 14.sp,
-                            )
-
-
-
-
-                        }
-                    } else {
-                        Text("Error Fetching Data")
-                    }
-                }
-            }
-        }
     }
 }

@@ -397,8 +397,8 @@ fun MainApp(navController: NavController) {
                 // Determine the current page and display content accordingly
                 currentPage.value = page
                 when (page) {
-                    0 -> CurrentWeatherScreenTEST(newLat.value,newLon.value)
-                    1 -> WeatherForecastScreenTEST(newLat.value,newLon.value)
+                    0 -> CurrentWeatherScreen(newLat.value,newLon.value)
+                    1 -> WeatherForecastScreen(newLat.value,newLon.value)
                 }
             }
         }

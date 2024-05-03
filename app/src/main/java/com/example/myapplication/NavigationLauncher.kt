@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun Navigation() {
+fun NavigationLauncher() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,

@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.classes.WeatherForecastData
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -47,7 +48,7 @@ fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
             Column(modifier = Modifier.weight(3f))
             {
 
-                Text(text=weatherItemDescriptionFormatter(weatherForecastData.weather[0].main), fontSize=15.sp)
+                Text(text=weatherForecastItemDescriptionFormatter(weatherForecastData.weather[0].main), fontSize=15.sp)
 
                 Text(text = "${weatherForecastData.main.temp_max.roundToInt()} °C", fontSize = 15.sp)
             }
@@ -65,7 +66,7 @@ fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
     }
 }
 @Composable
-fun weatherItemDescriptionFormatter(description: String): String {
+fun weatherForecastItemDescriptionFormatter(description: String): String {
     return when (description) {
         "Clear" -> stringResource(id = R.string.clear)
         "Rain" -> stringResource(id = R.string.rainy)
@@ -101,22 +102,3 @@ fun translateDateToDay(dtTxt: String): String {
     }
 }
 
-//basically duplicate code but adjusted, since it was unreachable
-@Composable
-fun getImageResource(description:String): Int
-{
-    val clouds = "Clouds"
-    val snow = "Snow"
-    val clear = "Clear"
-    val rain = "Rain"
-    val wind = "Wind"
-
-    return when (description) {
-        snow -> R.drawable.snowy_image
-        clouds -> R.drawable.cloudy_image
-        clear -> R.drawable.sunny_image
-        rain -> R.drawable.rainy_image
-        wind -> R.drawable.windy_image
-        else -> R.drawable.clicked_refresh_icon
-    }
-}

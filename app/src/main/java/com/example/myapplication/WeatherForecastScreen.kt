@@ -23,13 +23,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.classes.WeatherForecastData
+import com.example.myapplication.classes.WeatherForecastResponse
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 
 @Composable
-fun WeatherForecastScreenTEST(lat: Double, lon: Double) {  //changed from navHostController
+fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostController
     var isLoading by remember { mutableStateOf(true) }
     var fetchError by remember { mutableStateOf<String?>(null) }
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
