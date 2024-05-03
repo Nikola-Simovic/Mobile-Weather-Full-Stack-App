@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun NavigationLauncher() {
+fun NavigationLauncher() {  //Launches the navigation, nav controller and creates the screen routes
     val navController = rememberNavController()
     NavHost(
         navController = navController,

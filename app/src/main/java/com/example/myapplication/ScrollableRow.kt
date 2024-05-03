@@ -25,9 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.classes.WeatherForecastResponse
 
+//A scrollable row for the daily temperatures, so the user can see up to 24h in advance
+//with timestamps, temperatures and the weather itself displayed on the currentWeather screen
 @Composable
 fun ScrollableRow(weatherForecastResponse: WeatherForecastResponse?) {
-    var extractedText = "N/A"
+    var extractedText = "N/A"  //default values
     var extractedTemp = -99.99
     Box(
         modifier = Modifier
@@ -50,16 +52,16 @@ fun ScrollableRow(weatherForecastResponse: WeatherForecastResponse?) {
                         .background(MaterialTheme.colorScheme.secondaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (weatherForecastResponse != null) {
+                    if (weatherForecastResponse != null) {     //making sure that the response is valid
                         val text = weatherForecastResponse.list[index].dt_txt
                         extractedTemp = weatherForecastResponse.list[index].main.temp
-                        if (index == 0) {
+                        if (index == 0) {   //for the first one, "now" or a localized equivalent is used while the others are timestamped
                             extractedText = stringResource(R.string.now)
                         } else {
                             extractedText = text.substring(11..12)
                         }
 
-                        // Column to arrange image and text
+                        // the column arranges the time,icon and temperature to be displayed.
                         Column(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -84,7 +86,7 @@ fun ScrollableRow(weatherForecastResponse: WeatherForecastResponse?) {
 
                         }
                     } else {
-                        Text("Error Fetching Data")
+                        Text("Error Fetching Data")  //in case of an error, an error message is displayed
                     }
                 }
             }

@@ -24,6 +24,9 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 
+
+//The following code creates a list item to be displayed on the forecastScreen, with the day,
+//weather/temperature and an image displayed
 @Composable
 fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
     val primaryContainerColor = MaterialTheme.colorScheme.secondaryContainer
@@ -66,7 +69,7 @@ fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
     }
 }
 @Composable
-fun weatherForecastItemDescriptionFormatter(description: String): String {
+fun weatherForecastItemDescriptionFormatter(description: String): String { //localized strings for the items
     return when (description) {
         "Clear" -> stringResource(id = R.string.clear)
         "Rain" -> stringResource(id = R.string.rainy)
@@ -76,9 +79,9 @@ fun weatherForecastItemDescriptionFormatter(description: String): String {
     }
 }
 
-fun translateDateToDay(dtTxt: String): String {
+fun translateDateToDay(dtTxt: String): String {  //this code turns the date into an actual day to be displayed
     //  the date format for parsing the input date string
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())  //the way the data is recieved from the API
     //  the date format for translating the date to the day of the week
     val outputDateFormat = SimpleDateFormat("EEE", Locale.getDefault())
 
@@ -90,7 +93,7 @@ fun translateDateToDay(dtTxt: String): String {
         // formatting the Date object as the day of the week
         val dayOfWeek = outputDateFormat.format(date)
 
-        // Capitalize the first letter of the day of the week
+        // capitalizing the first letter of the day of the week (lowercase display by default at least for finnish)
         dayOfWeek.replaceFirstChar { it.uppercase() }
 
     } catch (e: Exception) {

@@ -31,7 +31,7 @@ import java.util.Locale
 
 
 @Composable
-fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostController
+fun WeatherForecastScreen(lat: Double, lon: Double) {  //can receive latitude and longitude for precise location display
     var isLoading by remember { mutableStateOf(true) }
     var fetchError by remember { mutableStateOf<String?>(null) }
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
@@ -42,10 +42,10 @@ fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostCon
 
 
 
-    LaunchedEffect(lat, lon) {
+    LaunchedEffect(lat, lon) { //on-launch and on lat/lon changes checks and management as well as error handling
         isLoading = true
-        if (lat == 0.0 && lon == 0.0) {
-            // Fetch data for Tampere
+        if (lat == 0.0 && lon == 0.0) { //these are the default values so this will always display tampere on startup
+            // fetches data for Tampere
             try {
                 weatherForecastResponse = RetrofitInstance.apiService.fetchWeatherForecastTampere()
                 fetchError = null
@@ -53,7 +53,7 @@ fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostCon
                 fetchError = e.message
             }
         } else {
-            // Fetch data based on latitude and longitude
+            // fetch data based on latitude and longitude if it changes
             try {
                 val response = RetrofitInstance.apiService.fetchWeatherForecastByCoordinates(lat, lon)
                 weatherForecastResponse = response
@@ -67,10 +67,10 @@ fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostCon
 
 
     if (isLoading) {
-        CircularProgressIndicator()
-    } else if (fetchError != null) {
+        CircularProgressIndicator()  //an indicator at the start to show it loading
+    } else if (fetchError != null) {  //error check
         Text("Error fetching data: $fetchError")
-    } else {
+    } else { //in case everything runs smoothly, a list of forecast list items is displayed with the following code
         var weatherForecastList = weatherForecastResponse!!.list
         var filteredForecastList = filterWeatherForecastList(weatherForecastList)
 
@@ -81,7 +81,6 @@ fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostCon
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            //Text(filteredForecastList.toString())
             Text(
                 text = stringResource(R.string.forecast),
                 modifier = Modifier.padding(top = 16.dp, start = 0.dp, end = 0.dp, bottom = 0.dp)
@@ -91,10 +90,10 @@ fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostCon
 
                         drawLine(
                             color = borderColor,
-                            start = Offset(0f, size.height), // Start point of the line
-                            end = Offset(size.width, size.height), // End point of the line
+                            start = Offset(0f, size.height), //start point of the line
+                            end = Offset(size.width, size.height), //end point of the line
                             strokeWidth = strokeWidth,
-                            cap = StrokeCap.Square //  the line cap style if needed
+                            cap = StrokeCap.Square
                         )
                     },
                 fontSize = 30.sp,
@@ -102,13 +101,13 @@ fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostCon
                 textAlign = TextAlign.Center
             )
 
-            LazyColumn(
+            LazyColumn(  //a lazy column of forecasts so that they can be scrolled if needed
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(filteredForecastList) { weatherData ->
+                items(filteredForecastList) { weatherData -> //uses a filter to display the list
                     WeatherForecastListItem(weatherData) }
                 }
 
@@ -120,6 +119,10 @@ fun WeatherForecastScreen(lat: Double, lon: Double) {  //changed from navHostCon
 }
 
 
+//Due to the nature of the API, that is the daily values being locked behind a paywall, the API used sends JSON
+//data for the next ~4 days in 3h intervals, so in order to make the forecast page work, they needed to be filtered
+//by day, after which I decided to take the one where the highest temperature occurs which is usually mid-day
+//and use that as the daily weather icon, since I think it's quite representable for the days weather
 fun filterWeatherForecastList(weatherForecastList: List<WeatherForecastData>): List<WeatherForecastData> {
     // the date format to extract the date part from `dt_txt`
     val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -146,7 +149,7 @@ fun filterWeatherForecastList(weatherForecastList: List<WeatherForecastData>): L
         }
     }
 
-    // return the list of maximum temperature forecasts
+    // returns the list of maximum temperature forecasts
     return maxTemperatureForecasts
 }
 

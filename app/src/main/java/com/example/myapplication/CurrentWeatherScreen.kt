@@ -46,11 +46,11 @@ import java.util.Locale
 
 
 @Composable
-fun CurrentWeatherScreen(lat: Double, lon: Double) {
+fun CurrentWeatherScreen(lat: Double, lon: Double) { //can receive a latitude and longitude and use those for the display
     var city=stringResource(R.string.tampere)
     var weatherResponse by remember { mutableStateOf<WeatherResponse?>(null) }         //simple remembers to update the app
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(true) }    //the app is always loading at the start so the default is true
 
     var temperature = -999.99   //default values, made clearly wrong, so that the app will stay stable and the error will be clear
     var windSpeed = -999.98
