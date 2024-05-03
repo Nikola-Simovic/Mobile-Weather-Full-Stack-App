@@ -37,4 +37,6 @@
     <string name="open_map">Open Map</string>
     <string name="clear">Clear</string>
     <string name="error">error</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_required_text"><![CDATA[This app requires your permission. To enable this functionality, go to Permissions -> Location -> Allow while using the app.]]></string>
 </resources>

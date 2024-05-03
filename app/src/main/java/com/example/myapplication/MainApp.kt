@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.content.Context.LOCATION_SERVICE
@@ -69,45 +70,46 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 //This is the main part of the application, here the outlines of the app are made, aka. the top and bottom bars on the main screen
 //and their functionalities. The content itself is scrolled via a pager which uses the CurrentWeatherScreen or WeatherForecastScreen
-//
+//based on the page. The dropdown menu with three items, a map that can be opened if permission is granted, the source website and
+//the About page itself. The content is set from the appropriate pages but the outline buttons and functions are located here.
 
-@SuppressLint("MissingPermission")
+@SuppressLint("MissingPermission")  //this part was followed from the video lectures
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class
 )
 @Composable
-fun MainApp(navController: NavController) {
+fun MainApp(navController: NavController) {     //navController for the navigation function
 
-    val isDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = isSystemInDarkTheme()     //some color coding based on the theme will be done here
 
     val titleColor = if (isDarkTheme) Color.White else Color.Black
     val headerColor = if (isDarkTheme) Color(202, 231, 254, 150) else { MaterialTheme.colorScheme.primaryContainer}
 
 
 
-    // Pass a lambda that returns the number of pages for the pager
+    // this passes a lambda that returns the number of pages for the pager
     val pagerState = rememberPagerState {
-        2 // Number of pages in your pager (screen1 and screen2)
+        2 // number of pages in the pager (currentWeather and forecast screens)
     }
 
     val context=LocalContext.current
     val locationManager= context.getSystemService(LOCATION_SERVICE) as LocationManager
-    val locationPermissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    val locationPermissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION) //location code
 
-    var lat = 89.99
+    var lat = 89.99      //the default values are set for the north pole, in case of an error, it's clear that there is an issue.
     var lon =179.99
-    var newLat=remember { mutableStateOf(0.0) }
+    var newLat=remember { mutableStateOf(0.0) }  //for the other lat and lon value, 0,0 is a point in the Atlantic ocean so again, clear issue.
     var newLon=remember { mutableStateOf(0.0) }
 
 
-    val currentPage = remember { mutableStateOf(0) }
+    val currentPage = remember { mutableStateOf(0) }  //following which page we are on
     currentPage.value = pagerState.currentPage
 
     var locationError by remember { mutableStateOf<String?>(null) }
 
 
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(Unit) {  //checks for permission on launch and sends a request to the user or error in case of an issue
         if(!(locationPermissionState.status.isGranted)) {
             try {
                 locationPermissionState.launchPermissionRequest()
@@ -119,9 +121,9 @@ fun MainApp(navController: NavController) {
 
 
 
-    Scaffold(
+    Scaffold(          //the scaffolding outline of the app
         topBar = {
-            CenterAlignedTopAppBar(
+            CenterAlignedTopAppBar(    //the top bar has a title and a dropdown menu
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = headerColor,
                     titleContentColor = MaterialTheme.colorScheme.primary,
@@ -139,29 +141,31 @@ fun MainApp(navController: NavController) {
                         )
                     }
                 },
-                actions = {
-                    // State variable to manage the expanded state of the dropdown menu
+                actions = {  //code that follows and controls the dropdown menu including its functionalities is located here
+                    // a state variable to manage the expanded state of the dropdown menu
                     var expanded by remember { mutableStateOf(false) }
 
                     Box(
-                        modifier = Modifier.fillMaxHeight(), // Fill the entire space of the top app bar
-                        contentAlignment = Alignment.CenterEnd  // Center the action button both vertically and horizontally
+                        modifier = Modifier.fillMaxHeight(), // fills the entire space of the top app bar
+                        contentAlignment = Alignment.CenterEnd
                     ) {
                         // Icon button that opens the dropdown menu
-                        IconButton(onClick = { expanded = !expanded }) {
+                        IconButton(onClick = { expanded = !expanded }) {  //simply opens the menu on click
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Main Menu"
+                                contentDescription = "Main Menu",
+                                modifier = Modifier.size(40.dp)
                             )
                         }
                     }
                     // Dropdown menu
-                    DropdownMenu(
+                    DropdownMenu(         //the code that runs the dropdown
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(
-                            onClick = {
+                            onClick = {    //the first item in the dropdown is the map opening, so the following code uses the fused provider
+                                //and checks for permission, after which it uses the location and opens a map if there is a map app available
                                 if (locationPermissionState.status.isGranted)
                                 {
                                     val location=locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
@@ -174,7 +178,7 @@ fun MainApp(navController: NavController) {
 
 
 
-                                    val locationEventListener = object: LocationListener{
+                                    val locationEventListener = object: LocationListener{  //a listener for the location information
                                         override fun onLocationChanged(location: Location) {
                                             if (location!=null)
                                             {
@@ -185,7 +189,6 @@ fun MainApp(navController: NavController) {
                                         }
 
                                         override fun onStatusChanged(provider: String, status: Int, extras: Bundle?) {
-
                                         }
 
                                         override fun onProviderEnabled(provider: String) {
@@ -208,32 +211,15 @@ fun MainApp(navController: NavController) {
                                         Toast.makeText(context, "No app available to show the location", Toast.LENGTH_SHORT).show()
                                     }
 
-
-
-
                                 }
-                                else {
-                                    val builder = AlertDialog.Builder(context)
-
-                                    builder.setTitle("Permission Required")
-                                    builder.setMessage("This app requires your permission. To enable this functionality, go to Permissions -> Location -> Allow while using the app.")
-
-                                    builder.setPositiveButton("OK") { _, _ ->
-                                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                        val uri = Uri.fromParts("package", context.packageName, null)
-                                        intent.data = uri
-                                        context.startActivity(intent)
-                                    }
-
-                                    // Create the dialog and show it
-                                    val dialog = builder.create()
-                                    dialog.show()
+                                else { //in case the permission is not granted,a dialogue is launched in the phones language
+                                    showPermissionAlertDialog(context)
                                 }
                                 expanded = false
                             },
                             text = { Text(stringResource(R.string.open_map)) }
                         )
-                        DropdownMenuItem(
+                        DropdownMenuItem(  //The menu item that opens the weather map api which is the source of the data
                             onClick = {
                                 val url = "https://openweathermap.org/api"
                                 val intent = Intent(Intent.ACTION_VIEW)
@@ -249,7 +235,7 @@ fun MainApp(navController: NavController) {
                             },
                             text = { Text(stringResource(R.string.our_source)) }
                         )
-                        DropdownMenuItem(
+                        DropdownMenuItem( //the final dropdown item, a simple navigation tool going to the about page with jetpack navigation
                             onClick = {
 
                                 navController.navigate("about")
@@ -262,11 +248,15 @@ fun MainApp(navController: NavController) {
                 modifier = Modifier
                     .height(70.dp)
 
-
-
             )
         }
         ,
+
+        //The bottom bar holds two icons and a dot indicator for the page the user is on. The left icon is the map icon, which
+        //Locates the user and updates the data for the users location (google maps has to be opened on the emulator for the location to update)
+        //then in the middle two indicator dots showing the page the user is on and finally a floating action button which is just a quick access
+        //button to the source link (thus the link icon on it)
+
         bottomBar = {
             BottomAppBar(containerColor =Color(202, 231, 254, 150)
             ) {
@@ -276,20 +266,20 @@ fun MainApp(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically,
 
                 ) {
-                    // Left-side icon
+                    // left-side map icon
                     IconButton(onClick = {
                                          if (locationPermissionState.status.isGranted)
                                          {
                                              val location=locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
 
                                              if (location != null) {
-                                                 newLon.value = location.longitude
-                                                 newLat.value = location.latitude
+                                                 newLon.value = location.longitude   //the new lon and lat values are used to update the screen and send the
+                                                 newLat.value = location.latitude    //required data to the page so that the proper town's weather can be displayed
 
                                              }
 
                                              val locationEventListener = object: LocationListener{
-                                                 override fun onLocationChanged(location: Location) {
+                                                 override fun onLocationChanged(location: Location) {  //a listener to update the location if it changes
                                                      if (location!=null)
                                                      {
                                                          lat = location.latitude
@@ -301,6 +291,7 @@ fun MainApp(navController: NavController) {
                                                      }
                                                  }
 
+                                                 //the following three are required, but the only thing they do is a toast message in some cases
                                                  override fun onStatusChanged(provider: String, status: Int, extras: Bundle?) {
 
                                                  }
@@ -318,22 +309,9 @@ fun MainApp(navController: NavController) {
 
 
                                          }
-                        else {
-                                             val builder = AlertDialog.Builder(context)
+                        else {  //again, if permission hasn't been granted, the app will launch a dialogue at the user if they want these features
+                            showPermissionAlertDialog(context)
 
-                                             builder.setTitle("Permission Required")
-                                             builder.setMessage("This app requires your permission. To enable this functionality, go to Permissions -> Location -> Allow while using the app.")
-
-                                             builder.setPositiveButton("OK") { _, _ ->
-                                                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                                 val uri = Uri.fromParts("package", context.packageName, null)
-                                                 intent.data = uri
-                                                 context.startActivity(intent)
-                                             }
-
-                                             // Create the dialog and show it
-                                             val dialog = builder.create()
-                                             dialog.show()
                         }
                     },
                         modifier = Modifier.padding(4.dp)) {
@@ -343,7 +321,7 @@ fun MainApp(navController: NavController) {
                         )
                     }
 
-                    // Center: Indicator Dots
+                    // center Indicator Dots
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -363,17 +341,17 @@ fun MainApp(navController: NavController) {
                         }
                     }
 
-                    // Right-side Floating Action Button
+                    // the right floating button for the quick access to the source link
                     FloatingActionButton(
                         onClick = {
                             val url = "https://openweathermap.org/api"
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.data = Uri.parse(url)
-                            if (intent.resolveActivity(context.packageManager) != null) {
+                            if (intent.resolveActivity(context.packageManager) != null) { //safety check to make sure the value is not null
                                 context.startActivity(intent)
                              }
                             else {
-                                 Toast.makeText(context, "No application found to handle the intent", Toast.LENGTH_LONG).show()
+                                 Toast.makeText(context, "No application found to handle the intent", Toast.LENGTH_LONG).show() //an error caught message
                             }
                                   },
                         containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
@@ -389,16 +367,16 @@ fun MainApp(navController: NavController) {
             }
 
         },
-        content = { innerPadding ->
+        content = { innerPadding ->  //The content shows the proper screen based on the pager values with the indentation adjusted
             val pagerState = rememberPagerState { 2 }
-            // Use HorizontalPager to handle swipe navigation
+            // the horizontal pager handles swipe navigation
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) { page ->
-                // Determine the current page and display content accordingly
+                // determines the current page and displays the content accordingly
                 currentPage.value = page
                 when (page) {
                     0 -> CurrentWeatherScreen(newLat.value,newLon.value)
@@ -409,4 +387,21 @@ fun MainApp(navController: NavController) {
     )
 }
 
+fun showPermissionAlertDialog(context : Context) { //the permission dialogue launcher in case the user hasn't accepted already, it displays a message
+    val builder = AlertDialog.Builder(context)     //in the users language telling them that the app needs more permissions and how to grant them if they wish
+
+    builder.setTitle(context.getString(R.string.permission_required))
+    builder.setMessage(context.getString(R.string.permission_required_text))
+
+    builder.setPositiveButton("OK") { _, _ ->
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", context.packageName, null)
+        intent.data = uri
+        context.startActivity(intent)
+    }
+
+// creates the dialog and shows it
+    val dialog = builder.create()
+    dialog.show()
+}
 

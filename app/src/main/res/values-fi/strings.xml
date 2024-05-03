@@ -38,4 +38,6 @@
     <string name="open_map">Avaa kartta</string>
     <string name="clear">Selkeä</string>
     <string name="error">virhe</string>
+    <string name="permission_required">Lupa vaaditaan</string>
+    <string name="permission_required_text"><![CDATA[Tämä sovellus tarvitsee luvan. Ota käyttöön tämä toiminnallisuus siirtymällä kohtaan Asetukset -> Sijainti -> Salli käytön aikana. ]]></string>
 </resources>
