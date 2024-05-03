@@ -16,4 +16,25 @@
     <string name="sunny">Sunny</string>
     <string name="rainy">Rainy</string>
     <string name="tampere">Tampere</string>
+    <string name="weather">Weather</string>
+    <string name="feels_like">Feels like</string>
+    <string name="humidity">Humidity</string>
+    <string name="direction">Direction</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="now">Now</string>
+    <string name="northShortcut">N</string>
+    <string name="northEastShortcut">NE</string>
+    <string name="eastShortcut">E</string>
+    <string name="southEastShortcut">SE</string>
+    <string name="southShortcut">S</string>
+    <string name="southWestShortcut">SW</string>
+    <string name="westShortcut">W</string>
+    <string name="northWestShortcut">NW</string>
+    <string name="about">About</string>
+    <string name="send_email">SEND EMAIL</string>
+    <string name="return_to_app">RETURN TO APP</string>
+    <string name="our_source">Our source</string>
+    <string name="open_map">Open Map</string>
+    <string name="clear">Clear</string>
+    <string name="error">error</string>
 </resources>

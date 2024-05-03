@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +51,7 @@ fun AboutScreen(navController: NavController) {
                         contentAlignment = Alignment.Center  // Center the title both vertically and horizontally
                     ) {
                         Text(
-                            text = "About",
+                            text = stringResource(R.string.about),
                             fontSize = 35.sp,
                             fontWeight = FontWeight.Bold,
                             color = titleColor
@@ -72,7 +73,7 @@ fun AboutScreen(navController: NavController) {
 
                     Button(
                         onClick = {
-                            var recipient="nikola.simovic@tuni.fi"
+                            val recipient="nikola.simovic@tuni.fi"
 
 
                             val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
@@ -90,7 +91,7 @@ fun AboutScreen(navController: NavController) {
                         colors = ButtonDefaults.buttonColors(buttonColorMode),
 
                         ) {
-                        Text("SEND EMAIL",color=titleColor)
+                        Text(stringResource(R.string.send_email),color=titleColor)
                     }
                     Button(
                         onClick = {
@@ -103,7 +104,7 @@ fun AboutScreen(navController: NavController) {
                         colors = ButtonDefaults.buttonColors(buttonColorMode),
 
                         ) {
-                        Text("RETURN TO APP",color=titleColor)
+                        Text(stringResource(R.string.return_to_app),color=titleColor)
                     }
                 }
             }

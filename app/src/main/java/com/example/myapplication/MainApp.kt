@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
-import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.location.Location
 import android.location.LocationListener
@@ -18,8 +17,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -33,7 +30,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
@@ -50,7 +46,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,20 +55,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
-
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -140,7 +128,7 @@ fun MainApp(navController: NavController) {
                         contentAlignment = Alignment.Center  // Center the title both vertically and horizontally
                     ) {
                         Text(
-                            "Weather",
+                            stringResource(R.string.weather),
                             overflow = TextOverflow.Ellipsis,
                             color = titleColor,
                             fontSize = 35.sp,
@@ -239,7 +227,7 @@ fun MainApp(navController: NavController) {
                                 }
                                 expanded = false
                             },
-                            text = { Text("Open Map") }
+                            text = { Text(stringResource(R.string.open_map)) }
                         )
                         DropdownMenuItem(
                             onClick = {
@@ -255,7 +243,7 @@ fun MainApp(navController: NavController) {
                                 expanded = false
 
                             },
-                            text = { Text("Our source") }
+                            text = { Text(stringResource(R.string.our_source)) }
                         )
                         DropdownMenuItem(
                             onClick = {
@@ -263,7 +251,7 @@ fun MainApp(navController: NavController) {
                                 navController.navigate("about")
                                 expanded = false
                             },
-                            text = { Text("About") }
+                            text = { Text(stringResource(R.string.about)) }
                         )
                     }
                 },

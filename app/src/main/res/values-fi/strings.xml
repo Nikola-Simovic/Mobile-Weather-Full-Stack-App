@@ -17,4 +17,25 @@
     <string name="sunny">Aurinkoinen</string>
     <string name="rainy">Sateinen</string>
     <string name="tampere">Tampere</string>
+    <string name="weather">Sää</string>
+    <string name="feels_like">Tuntuu kuin</string>
+    <string name="humidity">Ilmankosteus</string>
+    <string name="direction">Suunta</string>
+    <string name="wind_speed">Tuulen nopeus</string>
+    <string name="now">Nyt</string>
+    <string name="northShortcut">P</string>
+    <string name="northEastShortcut">KO</string>
+    <string name="eastShortcut">I</string>
+    <string name="southEastShortcut">KK</string>
+    <string name="southShortcut">E</string>
+    <string name="southWestShortcut">LO</string>
+    <string name="westShortcut">L</string>
+    <string name="northWestShortcut">LU</string>
+    <string name="about">Tietoja</string>
+    <string name="send_email">Lähetä email</string>
+    <string name="return_to_app">Palaa</string>
+    <string name="our_source">Lähteemme</string>
+    <string name="open_map">Avaa kartta</string>
+    <string name="clear">Selkeä</string>
+    <string name="error">virhe</string>
 </resources>

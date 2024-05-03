@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,6 +41,8 @@ import kotlin.math.roundToInt
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.platform.LocalContext
+import java.util.Locale
 
 
 @Composable
@@ -60,6 +63,8 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
     val isDarkTheme = isSystemInDarkTheme()
 
     val titleColor = if (isDarkTheme) Color.White else Color.Black
+    val context= LocalContext.current
+
 
 
 
@@ -151,7 +156,7 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
 
 
                 Text(
-                    text = "$weatherDescription in $city ",
+                    text = weatherDescriptionTextFormatter(weatherDescription,city,context), //due to finnish having a different word order
                     color = titleColor,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center,
@@ -201,7 +206,7 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        text = "Feels like",
+                                        text = stringResource(R.string.feels_like),
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal
                                     )
@@ -232,7 +237,7 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        text = "Humidity",
+                                        text = stringResource(R.string.humidity),
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal
                                     )
@@ -271,7 +276,7 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        text = "Wind Speed",
+                                        text = stringResource(R.string.wind_speed),
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal
                                     )
@@ -296,13 +301,13 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Text(
-                                        text = degreesToCompass(windDirection),
+                                        text = degreesToCompass(context,windDirection),
                                         fontSize = 28.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        text = "Direction",
+                                        text = stringResource(R.string.direction),
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal
                                     )
@@ -337,11 +342,38 @@ fun getBackgroundImageResource(description:String): Int
         else -> R.drawable.clicked_refresh_icon
     }
 }
-
-fun degreesToCompass(degrees: Int): String {
-    val directions = arrayOf("N", "NE", "E", "SE", "S", "SW", "W", "NW")
+fun degreesToCompass(context: Context, degrees: Int): String {
+    val directions = arrayOf(context.getString(R.string.northShortcut),
+        context.getString(R.string.northEastShortcut),
+        context.getString(R.string.eastShortcut),
+        context.getString(R.string.southEastShortcut),
+        context.getString(R.string.southShortcut),
+        context.getString(R.string.southWestShortcut),
+        context.getString(R.string.westShortcut),
+        context.getString(R.string.northWestShortcut))
     val index = ((degrees / 45.0) + 0.5).toInt() % 8
     return directions[index]
+}
+
+
+fun weatherDescriptionTextFormatter(description: String, city: String, context: Context) : String{
+    val locale: Locale = context.resources.configuration.locales.get(0)
+
+    val descriptionToResourceId = when (description) {
+        "Clear" -> R.string.clear
+        "Clouds" -> R.string.cloudy
+        "Rain" -> R.string.rainy
+        "Snow" -> R.string.snowy
+        else -> R.string.error
+    }
+
+    val localizedDescription = context.getString(descriptionToResourceId)
+
+    return if (locale.language == "en") {
+        "$description in $city"
+    } else {
+        "$localizedDescription ${city}ssa"
+    }
 }
 
 @Composable
@@ -373,7 +405,7 @@ fun ScrollableRow(weatherForecastResponse: WeatherForecastResponse?) {
                         val text = weatherForecastResponse.list[index].dt_txt
                         extractedTemp = weatherForecastResponse.list[index].main.temp
                         if (index == 0) {
-                            extractedText = "Now"
+                            extractedText = stringResource(R.string.now)
                         } else {
                             extractedText = text.substring(11..12)
                         }

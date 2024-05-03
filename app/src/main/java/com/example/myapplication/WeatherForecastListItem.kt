@@ -14,8 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
@@ -47,7 +47,7 @@ fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
             Column(modifier = Modifier.weight(3f))
             {
 
-                Text(text=weatherForecastData.weather[0].main, fontSize=15.sp)
+                Text(text=weatherItemDescriptionFormatter(weatherForecastData.weather[0].main), fontSize=15.sp)
 
                 Text(text = "${weatherForecastData.main.temp_max.roundToInt()} °C", fontSize = 15.sp)
             }
@@ -64,6 +64,16 @@ fun WeatherForecastListItem(weatherForecastData: WeatherForecastData) {
         }
     }
 }
+@Composable
+fun weatherItemDescriptionFormatter(description: String): String {
+    return when (description) {
+        "Clear" -> stringResource(id = R.string.clear)
+        "Rain" -> stringResource(id = R.string.rainy)
+        "Snow" -> stringResource(id = R.string.snowy)
+        "Clouds" -> stringResource(id = R.string.cloudy)
+        else -> stringResource(id = R.string.error)
+    }
+}
 
 fun translateDateToDay(dtTxt: String): String {
     //  the date format for parsing the input date string
@@ -77,7 +87,11 @@ fun translateDateToDay(dtTxt: String): String {
             inputDateFormat.parse(dtTxt) ?: throw IllegalArgumentException("Invalid date format")
 
         // formatting the Date object as the day of the week
-        outputDateFormat.format(date)
+        val dayOfWeek = outputDateFormat.format(date)
+
+        // Capitalize the first letter of the day of the week
+        dayOfWeek.replaceFirstChar { it.uppercase() }
+
     } catch (e: Exception) {
         // handling any parsing or formatting exceptions
         println("Error translating date to day: ${e.localizedMessage}")

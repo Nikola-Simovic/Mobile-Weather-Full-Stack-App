@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +20,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,17 +33,6 @@ fun WeatherForecastScreenTEST(lat: Double, lon: Double) {  //changed from navHos
     var isLoading by remember { mutableStateOf(true) }
     var fetchError by remember { mutableStateOf<String?>(null) }
     var weatherForecastResponse by remember { mutableStateOf<WeatherForecastResponse?>(null) }
-
-
-    val weatherForecast = mutableListOf(
-        WeatherData(stringResource(R.string.mon), stringResource(R.string.cloudy), -2.3),
-        WeatherData(stringResource(R.string.tue), stringResource(R.string.snowy), -2.0),
-        WeatherData(stringResource(R.string.wed), stringResource(R.string.windy), -3.0),
-        WeatherData(stringResource(R.string.thu), stringResource(R.string.snowy), -6.2),
-        WeatherData(stringResource(R.string.fri), stringResource(R.string.sunny), -12.3),
-        WeatherData(stringResource(R.string.sat), stringResource(R.string.cloudy), 2.4),
-        WeatherData(stringResource(R.string.sun), stringResource(R.string.rainy), 3.6),
-    )
 
     val isDarkTheme = isSystemInDarkTheme()
 
@@ -94,7 +81,7 @@ fun WeatherForecastScreenTEST(lat: Double, lon: Double) {  //changed from navHos
         {
             //Text(filteredForecastList.toString())
             Text(
-                text = "Forecast ",
+                text = stringResource(R.string.forecast),
                 modifier = Modifier.padding(top = 16.dp, start = 0.dp, end = 0.dp, bottom = 0.dp)
                     .drawBehind {
                         val borderColor = titleColor
