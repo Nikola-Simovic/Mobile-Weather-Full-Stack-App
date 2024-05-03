@@ -3,8 +3,9 @@ package com.example.myapplication
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,26 +22,48 @@ import androidx.navigation.NavController
 fun AboutScreen(navController: NavController) {
     val context= LocalContext.current
 
+    val isDarkTheme = isSystemInDarkTheme()
+
+    val titleColor = if (isDarkTheme) Color.White else Color.Black
+    val textColor = if (isDarkTheme) Color.White else MaterialTheme.colorScheme.onSurface
+    var backgroundColor = if (isDarkTheme) {
+        Color(230, 239, 244, 100)
+    } else {
+        Color(230, 239, 244, 100)
+
+    }
+    val headerColor = if (isDarkTheme) Color(202, 231, 254, 150) else { MaterialTheme.colorScheme.primaryContainer}
+
+    var buttonColorMode = if (isDarkTheme) MaterialTheme.colorScheme.secondaryContainer else { MaterialTheme.colorScheme.primaryContainer}
+
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = headerColor,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(
-                        text = "About",
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
+                    Box(
+                        modifier = Modifier.fillMaxSize(), // Fill the entire space of the top app bar
+                        contentAlignment = Alignment.Center  // Center the title both vertically and horizontally
+                    ) {
+                        Text(
+                            text = "About",
+                            fontSize = 35.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = titleColor
+                        )
+                    }
+                },
+                modifier = Modifier.height(70.dp)
             )
         },
         bottomBar = {
             // Define a BottomAppBar
-            BottomAppBar {
+            BottomAppBar (containerColor =Color(202, 231, 254, 150)
+            ){
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -63,10 +86,11 @@ fun AboutScreen(navController: NavController) {
                                 Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()
                             }
                         },
+                        modifier = Modifier.padding(16.dp).weight(1f),
+                        colors = ButtonDefaults.buttonColors(buttonColorMode),
 
-                        modifier = Modifier.padding(16.dp).weight(1f)
-                    ) {
-                        Text("SEND EMAIL")
+                        ) {
+                        Text("SEND EMAIL",color=titleColor)
                     }
                     Button(
                         onClick = {
@@ -75,9 +99,11 @@ fun AboutScreen(navController: NavController) {
                             }
                         },
 
-                        modifier = Modifier.padding(16.dp).weight(1f)
-                    ) {
-                        Text("RETURN TO APP")
+                        modifier = Modifier.padding(16.dp).weight(1f),
+                        colors = ButtonDefaults.buttonColors(buttonColorMode),
+
+                        ) {
+                        Text("RETURN TO APP",color=titleColor)
                     }
                 }
             }
@@ -86,17 +112,19 @@ fun AboutScreen(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(backgroundColor)
                     .padding(innerPadding)
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                BasicText(
+                Text(
                     text = "Hey!\n\nI'm Nikola, a software engineering student AND the creator of this app!\n\nThis entire app was made by me" +
                             " and I truly hope your enjoying it!\n\nThe app is quite new so if there are any suggestions or bugs you'd like to report (or just want to" +
                             " send me an email talking about how much you like the app) you can do so by pressing the button at the bottom of the screen!" +
                             "\n\nOtherwise, I hope you have a great day!\n\nBR. The creator\n\nP.S. None of the images used were created by me, I'm just a simple programmer not a designer 😅" ,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = textColor
                 )
 
             }

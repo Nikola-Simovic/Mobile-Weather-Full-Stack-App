@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -45,6 +46,11 @@ fun WeatherForecastScreenTEST(lat: Double, lon: Double) {  //changed from navHos
         WeatherData(stringResource(R.string.sat), stringResource(R.string.cloudy), 2.4),
         WeatherData(stringResource(R.string.sun), stringResource(R.string.rainy), 3.6),
     )
+
+    val isDarkTheme = isSystemInDarkTheme()
+
+    val titleColor = if (isDarkTheme) Color.White else Color.Black
+
 
 
     LaunchedEffect(lat, lon) {
@@ -91,7 +97,7 @@ fun WeatherForecastScreenTEST(lat: Double, lon: Double) {  //changed from navHos
                 text = "Forecast ",
                 modifier = Modifier.padding(top = 16.dp, start = 0.dp, end = 0.dp, bottom = 0.dp)
                     .drawBehind {
-                        val borderColor = Color.Black
+                        val borderColor = titleColor
                         val strokeWidth = 3.dp.toPx()
 
                         drawLine(
@@ -102,8 +108,8 @@ fun WeatherForecastScreenTEST(lat: Double, lon: Double) {  //changed from navHos
                             cap = StrokeCap.Square //  the line cap style if needed
                         )
                     },
-                fontSize = 34.sp,
-                color = Color.Black,
+                fontSize = 30.sp,
+                color = titleColor,
                 textAlign = TextAlign.Center
             )
 

@@ -28,45 +28,4 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun TheApp() {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = "home",  // start destination
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Define composable destinations
-        composable("home") {
-            PagingTest(navController = navController)
-        }
-
-        /* composable("firstPage") {
-            FirstPage()
-        }
-        composable("secondPage") {
-            SecondPage()
-        } */
-        //  more destinations if needed
-    }
-}
-
-
-
-@Composable
-fun App(){
-    val navController = rememberNavController()
-    NavHost(navController , startDestination = "currentWeatherScreen" )
-    {
-        composable("currentWeatherScreen") {
-            //CurrentWeatherScreen(navController)
-        }
-        composable ("weatherForecastScreen")
-        {
-            WeatherForecastScreen(navController)
-        }
-    }
-}
-
 

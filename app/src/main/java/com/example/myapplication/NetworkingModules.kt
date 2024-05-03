@@ -68,10 +68,6 @@ data class Sys(
 
 interface ApiService
 {
-
-    @GET("todos")
-    suspend fun fetchTodos(): List<TodoItem>
-
     @GET("weather?q=Tampere,fi&APPID=57a76f941c3f4809f76030d74cf4b726&units=metric")
     suspend fun fetchCurrentWeatherTampere(): WeatherResponse
 

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.rememberScrollState
 
 
@@ -55,6 +56,10 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
     var weatherDescription="Error"
 
     var fetchError by remember { mutableStateOf<String?>(null) }
+
+    val isDarkTheme = isSystemInDarkTheme()
+
+    val titleColor = if (isDarkTheme) Color.White else Color.Black
 
 
 
@@ -147,7 +152,7 @@ fun CurrentWeatherScreenTEST(lat: Double, lon: Double) {
 
                 Text(
                     text = "$weatherDescription in $city ",
-                    color = Color.Black,
+                    color = titleColor,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -379,9 +384,9 @@ fun ScrollableRow(weatherForecastResponse: WeatherForecastResponse?) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                            text = extractedText,
-                            fontSize = 14.sp,
-                        )
+                                text = extractedText,
+                                fontSize = 14.sp,
+                            )
 
                             Image(
                                 painter = painterResource(id = getImageResource(weatherForecastResponse.list[index].weather[0].main)),

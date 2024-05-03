@@ -15,14 +15,17 @@ import android.widget.Toast
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -78,13 +81,18 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @SuppressLint("MissingPermission")
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalPagerApi::class, ExperimentalPermissionsApi::class
+    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class
 )
 @Composable
 fun MainApp(navController: NavController) {
 
-    // Use the correct overload of rememberPagerState
+    val isDarkTheme = isSystemInDarkTheme()
+
+    val titleColor = if (isDarkTheme) Color.White else Color.Black
+    val headerColor = if (isDarkTheme) Color(202, 231, 254, 150) else { MaterialTheme.colorScheme.primaryContainer}
+
+
+
     // Pass a lambda that returns the number of pages for the pager
     val pagerState = rememberPagerState {
         2 // Number of pages in your pager (screen1 and screen2)
@@ -123,30 +131,38 @@ fun MainApp(navController: NavController) {
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = headerColor,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(
-                        "Weather",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = Color.Black,
-                        fontSize = 30.sp
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxSize(), // Fill the entire space of the top app bar
+                        contentAlignment = Alignment.Center  // Center the title both vertically and horizontally
+                    ) {
+                        Text(
+                            "Weather",
+                            overflow = TextOverflow.Ellipsis,
+                            color = titleColor,
+                            fontSize = 35.sp,
+                        )
+                    }
                 },
                 actions = {
                     // State variable to manage the expanded state of the dropdown menu
                     var expanded by remember { mutableStateOf(false) }
 
-                    // Icon button that opens the dropdown menu
-                    IconButton(onClick = { expanded = !expanded }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Main Menu"
-                        )
+                    Box(
+                        modifier = Modifier.fillMaxHeight(), // Fill the entire space of the top app bar
+                        contentAlignment = Alignment.CenterEnd  // Center the action button both vertically and horizontally
+                    ) {
+                        // Icon button that opens the dropdown menu
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Main Menu"
+                            )
+                        }
                     }
-
                     // Dropdown menu
                     DropdownMenu(
                         expanded = expanded,
@@ -188,6 +204,7 @@ fun MainApp(navController: NavController) {
                                             Toast.makeText(context, "Provider $provider is disabled", Toast.LENGTH_SHORT).show()
                                         }
                                     }
+
                                     locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,0,0.0f,locationEventListener)
                                     val geoUri = Uri.parse("geo:$lat,$lon?q=$lat,$lon")
 
@@ -249,7 +266,9 @@ fun MainApp(navController: NavController) {
                             text = { Text("About") }
                         )
                     }
-                }
+                },
+                modifier = Modifier
+                    .height(70.dp)
 
 
 
@@ -257,11 +276,13 @@ fun MainApp(navController: NavController) {
         }
         ,
         bottomBar = {
-            BottomAppBar {
+            BottomAppBar(containerColor =Color(202, 231, 254, 150)
+            ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+
                 ) {
                     // Left-side icon
                     IconButton(onClick = {
